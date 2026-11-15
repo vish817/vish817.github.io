@@ -136,6 +136,34 @@ footer{text-align:center;padding:25px;color:#8997b2;border-top:1px solid #263653
   </a>
  </div>
 
+ <div class="panel" id="enhancer">
+  <h2>✨ Image Enhancer</h2>
+  <p>Enhance your photos and remove backgrounds.</p>
+
+  <h3>📸 Photo Enhancer</h3>
+  <input type="file" id="enhanceFile" accept="image/*">
+
+  <label>Brightness</label>
+  <input type="range" id="brightness" min="50" max="200" value="100">
+
+  <label>Contrast</label>
+  <input type="range" id="contrast" min="50" max="200" value="100">
+
+  <label>Saturation</label>
+  <input type="range" id="saturation" min="0" max="200" value="100">
+
+  <img id="enhancePreview" class="hidden" style="width:100%;max-width:350px">
+
+  <button onclick="enhancePhoto()">Enhance Photo</button>
+
+  <button onclick="removeBackground()">Remove Background</button>
+
+  <p id="enhanceResult" class="result"></p>
+  <a id="enhanceDownload" class="hidden" download="toolify-enhanced.png">
+   Download Image
+  </a>
+ </div>
+ 
  <div class="panel" id="qr">
   <h2>🔳 QR Code Generator</h2>
   <input id="qrText" placeholder="Enter text or website URL">
