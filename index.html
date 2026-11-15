@@ -1,123 +1,257 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#101a36">
-  <title>Home</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 24px;
-      overflow: hidden;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-      color: #f8fafc;
-      background:
-        radial-gradient(circle at 15% 15%, rgba(76, 110, 245, .35), transparent 34%),
-        radial-gradient(circle at 85% 80%, rgba(168, 85, 247, .28), transparent 32%),
-        linear-gradient(135deg, #0b1228, #18264a 55%, #111827);
-    }
-    .glow {
-      position: fixed;
-      width: 220px;
-      height: 220px;
-      border-radius: 50%;
-      filter: blur(70px);
-      opacity: .35;
-      pointer-events: none;
-    }
-    .glow.one { background: #4f46e5; top: -70px; right: -40px; }
-    .glow.two { background: #06b6d4; bottom: -90px; left: -50px; }
-    main {
-      position: relative;
-      width: min(100%, 560px);
-      padding: clamp(32px, 8vw, 58px) 26px;
-      text-align: center;
-      border: 1px solid rgba(255,255,255,.16);
-      border-radius: 28px;
-      background: rgba(255,255,255,.09);
-      box-shadow: 0 28px 80px rgba(0,0,0,.35);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-    }
-    .mark {
-      width: 58px; height: 58px;
-      display: grid; place-items: center;
-      margin: 0 auto 22px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, #60a5fa, #8b5cf6);
-      box-shadow: 0 10px 28px rgba(96,165,250,.28);
-      font-size: 27px;
-    }
-    .eyebrow {
-      margin: 0 0 12px;
-      color: #b9c8f5;
-      font-size: .78rem;
-      font-weight: 700;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-    }
-    h1 {
-      margin: 0;
-      font-size: clamp(2.8rem, 12vw, 4.5rem);
-      line-height: 1.05;
-      letter-spacing: -.055em;
-    }
-    p {
-      max-width: 370px;
-      margin: 18px auto 30px;
-      color: #d2daf0;
-      font-size: clamp(1rem, 4vw, 1.12rem);
-      line-height: 1.7;
-    }
-    a.button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 52px;
-      padding: 0 27px;
-      border-radius: 14px;
-      color: #101a36;
-      background: linear-gradient(100deg, #a5d8ff, #c4b5fd);
-      font-weight: 750;
-      text-decoration: none;
-      box-shadow: 0 12px 30px rgba(96,165,250,.2);
-      transition: transform .2s ease, box-shadow .2s ease;
-    }
-    a.button:hover { transform: translateY(-3px); box-shadow: 0 16px 34px rgba(96,165,250,.3); }
-    .foot {
-      margin: 28px 0 0;
-      color: #9eacd0;
-      font-size: .82rem;
-      letter-spacing: .02em;
-    }
-    @media (prefers-reduced-motion: no-preference) {
-      main { animation: rise .7s ease both; }
-      @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toolify - Free Online Tools</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;font-family:Arial,sans-serif;
+ background:#0b1020;color:white;
+}
+header{
+ display:flex;justify-content:space-between;
+ align-items:center;padding:18px 6%;
+ background:#111a30;border-bottom:1px solid #263653;
+ position:sticky;top:0;z-index:5;
+}
+.logo{font-size:27px;font-weight:bold;color:#8b83ff}
+.logo span{color:white}
+header a{color:white;text-decoration:none}
+.hero{text-align:center;padding:55px 15px 35px}
+.hero h1{font-size:38px;margin:0 0 12px}
+.hero h1 span{color:#9287ff}
+.hero p{color:#aeb9d0}
+.search{
+ width:90%;max-width:550px;padding:15px;
+ border-radius:12px;border:1px solid #53658d;
+ background:#18233c;color:white;font-size:16px;
+ margin-top:20px;outline:none;
+}
+.section{padding:20px 6% 55px}
+.section h2{margin-bottom:20px}
+.grid{
+ display:grid;grid-template-columns:repeat(2,1fr);
+ gap:15px;
+}
+.tool{
+ background:linear-gradient(145deg,#192642,#111a30);
+ border:1px solid #293c61;border-radius:17px;
+ padding:22px 16px;cursor:pointer;
+ transition:.2s;
+}
+.tool:hover{transform:translateY(-4px);border-color:#8b83ff}
+.tool .emoji{font-size:30px}
+.tool h3{font-size:17px;margin:13px 0 7px}
+.tool p{font-size:13px;color:#aeb9d0;margin:0}
+.panel{
+ display:none;background:#17233c;
+ border:1px solid #40547d;border-radius:17px;
+ padding:20px;margin-top:25px;
+}
+.panel input,.panel textarea{
+ width:100%;padding:13px;margin:10px 0;
+ border-radius:9px;border:1px solid #506080;
+ background:#0d172b;color:white;font-size:15px;
+}
+button{
+ border:0;padding:12px 18px;border-radius:9px;
+ background:linear-gradient(90deg,#695cff,#a04dff);
+ color:white;font-weight:bold;cursor:pointer;
+ margin:5px 3px 5px 0;
+}
+.result{color:#71edb1;overflow-wrap:anywhere}
+#qrOutput{background:white;padding:10px;width:max-content;max-width:100%;margin-top:15px}
+#qrOutput img,#qrOutput canvas{max-width:100%}
+footer{text-align:center;padding:25px;color:#8997b2;border-top:1px solid #263653}
+.hidden{display:none}
+@media(min-width:700px){
+ .grid{grid-template-columns:repeat(4,1fr)}
+ .hero h1{font-size:48px}
+}
+</style>
 </head>
 <body>
-  <div class="glow one"></div>
-  
-  <div class="glow two"></div>
-  <main>
-    <div class="mark" aria-hidden="true">⌂</div>
-    <div class="eyebrow">A little place on the web</div>
-    <h1>VISHAL</h1>
-    <p>Welcome to my website. Simple beginnings, endless possibilities.</p>
-    <p>I am Vishal a BA graduate </p>
-    <a href="https://www.instagram.com/it__is__vishal" target="_blank" style="display: inline-block; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; padding: 14px 28px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-  📸 Follow Me on Instagram
-</a>
 
-<p style="margin-top:8px; color: #555;">@it__is__vishal</p>
-    <a class="button" href="#welcome" onclick="document.getElementById('welcome').textContent='Thanks for visiting Home!'">Explore Home</a>
-    <div class="foot" id="welcome">Made with care · Welcome</div>
-  </main>
+<header>
+ <div class="logo">Tool<span>ify.</span></div>
+ <a href="#tools">Explore Tools ↓</a>
+</header>
+
+<section class="hero">
+ <h1>Make Your Work <span>Easy.</span></h1>
+ <p>Free online tools for your everyday needs.</p>
+ <input class="search" id="search"
+ placeholder="Search tools..." oninput="searchTools()">
+</section>
+
+<section class="section" id="tools">
+ <h2>Explore Our Tools</h2>
+ <div class="grid" id="toolGrid">
+  <div class="tool" data-name="image compressor" onclick="openTool('image')">
+   <div class="emoji">🖼️</div>
+   <h3>Image Compressor</h3>
+   <p>Reduce image file size.</p>
+  </div>
+  <div class="tool" data-name="qr generator" onclick="openTool('qr')">
+   <div class="emoji">🔳</div>
+   <h3>QR Generator</h3>
+   <p>Create QR codes instantly.</p>
+  </div>
+  <div class="tool" data-name="word counter" onclick="openTool('words')">
+   <div class="emoji">📝</div>
+   <h3>Word Counter</h3>
+   <p>Count words and characters.</p>
+  </div>
+  <div class="tool" data-name="password generator" onclick="openTool('password')">
+   <div class="emoji">🔐</div>
+   <h3>Password Generator</h3>
+   <p>Create strong passwords.</p>
+  </div>
+ </div>
+
+ <div class="panel" id="image">
+  <h2>🖼️ Image Compressor</h2>
+  <p>Choose an image to reduce its size.</p>
+  <input type="file" id="imageFile" accept="image/*">
+  <label>Quality: <span id="qualityText">70%</span></label>
+  <input type="range" id="quality" min="10" max="100" value="70"
+   oninput="qualityText.textContent=this.value+'%'">
+  <button onclick="compressImage()">Compress Image</button>
+  <p id="imageResult" class="result"></p>
+  <a id="imageDownload" class="hidden" download="toolify-image.jpg">
+   <button>Download Image</button>
+  </a>
+ </div>
+
+ <div class="panel" id="qr">
+  <h2>🔳 QR Code Generator</h2>
+  <input id="qrText" placeholder="Enter text or website URL">
+  <button onclick="makeQR()">Generate QR</button>
+  <div id="qrOutput"></div>
+  <button id="qrDownload" class="hidden" onclick="downloadQR()">
+   Download QR
+  </button>
+ </div>
+
+ <div class="panel" id="words">
+  <h2>📝 Word Counter</h2>
+  <textarea id="wordText" rows="7"
+   placeholder="Type or paste your text here..."
+   oninput="countWords()"></textarea>
+  <p id="wordResult" class="result">Words: 0 | Characters: 0</p>
+ </div>
+
+ <div class="panel" id="password">
+  <h2>🔐 Password Generator</h2>
+  <label>Password length</label>
+  <input type="number" id="passLength" value="16" min="8" max="64">
+  <button onclick="makePassword()">Generate Password</button>
+  <p id="passResult" class="result"></p>
+  <button onclick="copyPassword()">Copy Password</button>
+ </div>
+</section>
+
+<footer>
+ <h3>Toolify.</h3>
+<p>Simple • Fast • Free</p>
+<p>© 2026 Toolify. All rights reserved.</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+let currentTool = null;
+
+function openTool(id){
+ document.querySelectorAll('.panel').forEach(p=>p.style.display='none');
+ const panel=document.getElementById(id);
+ panel.style.display='block';
+ currentTool=id;
+ panel.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function searchTools(){
+ const q=document.getElementById('search').value.toLowerCase();
+ document.querySelectorAll('.tool').forEach(t=>{
+  t.style.display=t.dataset.name.includes(q)?'block':'none';
+ });
+}
+
+function countWords(){
+ const text=document.getElementById('wordText').value.trim();
+ const words=text?text.split(/\s+/).length:0;
+ document.getElementById('wordResult').textContent=
+ 'Words: '+words+' | Characters: '+document.getElementById('wordText').value.length;
+}
+
+function makePassword(){
+ const length=Math.min(64,Math.max(8,
+ Number(document.getElementById('passLength').value)||16));
+ const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*';
+ const random=new Uint32Array(length);
+ crypto.getRandomValues(random);
+ let password='';
+ for(let n of random) password+=chars[n%chars.length];
+ document.getElementById('passResult').textContent=password;
+}
+
+function copyPassword(){
+ const p=document.getElementById('passResult').textContent;
+ if(p) navigator.clipboard.writeText(p).then(()=>alert('Password copied!'))
+ .catch(()=>alert('Copy not available. Select the password manually.'));
+}
+
+function makeQR(){
+ const text=document.getElementById('qrText').value.trim();
+ if(!text){alert('Please enter text or URL');return;}
+ if(typeof QRCode==='undefined'){alert('QR library could not load. Check internet connection.');return;}
+ const output=document.getElementById('qrOutput');
+ output.innerHTML='';
+ new QRCode(output,{text:text,width:200,height:200});
+ document.getElementById('qrDownload').classList.remove('hidden');
+}
+
+function downloadQR(){
+ const output=document.getElementById('qrOutput');
+ const canvas=output.querySelector('canvas');
+ const img=output.querySelector('img');
+ let url=canvas?canvas.toDataURL('image/png'):img?img.src:null;
+ if(!url){alert('Generate a QR code first.');return;}
+ const a=document.createElement('a');
+ a.href=url;a.download='toolify-qr.png';a.click();
+}
+
+function compressImage(){
+ const file=document.getElementById('imageFile').files[0];
+ if(!file){alert('Please select an image.');return;}
+ if(!file.type.startsWith('image/')){alert('Select a valid image.');return;}
+ const reader=new FileReader();
+ reader.onload=e=>{
+  const img=new Image();
+  img.onload=()=>{
+   const canvas=document.createElement('canvas');
+   canvas.width=img.width;canvas.height=img.height;
+   canvas.getContext('2d').drawImage(img,0,0);
+   canvas.toBlob(blob=>{
+    if(!blob){alert('Compression failed.');return;}
+    const url=URL.createObjectURL(blob);
+    const old=document.getElementById('imageDownload');
+    if(old.dataset.url)URL.revokeObjectURL(old.dataset.url);
+    old.href=url;old.dataset.url=url;
+    old.classList.remove('hidden');
+    document.getElementById('imageResult').textContent=
+     'Original: '+(file.size/1024).toFixed(1)+' KB | New: '+
+     (blob.size/1024).toFixed(1)+' KB';
+   },'image/jpeg',Number(document.getElementById('quality').value)/100);
+  };
+  img.onerror=()=>alert('Could not read this image.');
+  img.src=e.target.result;
+ };
+ reader.onerror=()=>alert('File could not be read.');
+ reader.readAsDataURL(file);
+}
+</script>
 </body>
-</html>
+   </html>
+  
