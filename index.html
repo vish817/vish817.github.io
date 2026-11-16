@@ -277,35 +277,139 @@ function downloadQR(){
  a.href=url;a.download='toolify-qr.png';a.click();
 }
 
-function compressImage(){
- const file=document.getElementById('imageFile').files[0];
- if(!file){alert('Please select an image.');return;}
- if(!file.type.startsWith('image/')){alert('Select a valid image.');return;}
- const reader=new FileReader();
- reader.onload=e=>{
-  const img=new Image();
-  img.onload=()=>{
-   const canvas=document.createElement('canvas');
-   canvas.width=img.width;canvas.height=img.height;
-   canvas.getContext('2d').drawImage(img,0,0);
-   canvas.toBlob(blob=>{
-    if(!blob){alert('Compression failed.');return;}
-    const url=URL.createObjectURL(blob);
-    const old=document.getElementById('imageDownload');
-    if(old.dataset.url)URL.revokeObjectURL(old.dataset.url);
-    old.href=url;old.dataset.url=url;
-    old.classList.remove('hidden');
-    document.getElementById('imageResult').textContent=
-     'Original: '+(file.size/1024).toFixed(1)+' KB | New: '+
-     (blob.size/1024).toFixed(1)+' KB';
-   },'image/jpeg',Number(document.getElementById('quality').value)/100);
-  };
-  img.onerror=()=>alert('Could not read this image.');
-  img.src=e.target.result;
- };
- reader.onerror=()=>alert('File could not be read.');
- reader.readAsDataURL(file);
-}
+ 
+async function compressImage(){
+ const file = document.getElementById('imageFile').files[0];
+ const result = document.getElementById('imageResult');
+ const download = document.getElementById('imageDownload');
+
+ if(!file){
+  alert('Please select an image.');
+  return;
+ }
+
+ if(!file.type.startsWith('image/')){
+  alert('Select a valid image.');
+  return;
+ }
+
+ const targetKB = Number(document.getElementById('targetSize').value);
+ const useTarget = document.getElementById('targetSize').value.trim() !== '';
+
+ if(useTarget && (!Number.isFinite(targetKB) || targetKB <= 0)){
+  alert('Please enter a valid target size in KB.');
+  return;
+ }
+
+ result.textContent = 'Compressing image...';
+ download.classList.add('hidden');
+
+ try{
+  const img = new Image();
+  const imageURL = URL.createObjectURL(file);
+
+  await new Promise((resolve,reject)=>{
+   img.onload = resolve;
+   img.onerror = reject;
+   img.src = imageURL;
+  });
+
+  const canvas = document.createElement('canvas');
+  canvas.width = img.naturalWidth;
+  canvas.height = img.naturalHeight;
+
+  const ctx = canvas.getContext('2d');
+
+  // White background prevents transparent areas turning black.
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.drawImage(img,0,0);
+
+  URL.revokeObjectURL(imageURL);
+
+  function makeBlob(quality){
+   return new Promise(resolve=>{
+    canvas.toBlob(resolve,'image/jpeg',quality);
+   });
+  }
+
+  let blob;
+  let finalQuality = 0;
+
+  if(useTarget){
+   const targetBytes = targetKB * 1024;
+   let low = 0.01;
+   let high = 1;
+   let bestBlob = null;
+
+   // Find the highest quality that meets the target.
+   for(let i=0;i<9;i++){
+    const mid = (low + high) / 2;
+    const testBlob = await makeBlob(mid);
+
+    if(!testBlob) throw new Error('Compression failed.');
+
+    if(testBlob.size <= targetBytes){
+     bestBlob = testBlob;
+     finalQuality = mid;
+     low = mid;
+    }else{
+     high = mid;
+    }
+   }
+
+   if(bestBlob){
+    blob = bestBlob;
+   }else{
+    blob = await makeBlob(0.01);
+    finalQuality = 0.01;
+   }
+
+  }else{
+   finalQuality = Number(document.getElementById('quality').value)/100;
+   blob = await makeBlob(finalQuality);
+  }
+
+  if(!blob) throw new Error('Compression failed.');
+
+  if(download.dataset.url){
+   URL.revokeObjectURL(download.dataset.url);
+  }
+
+  const url = URL.createObjectURL(blob);
+  download.href = url;
+  download.dataset.url = url;
+  download.classList.remove('hidden');
+
+  const originalKB = file.size / 1024;
+  const newKB = blob.size / 1024;
+  const saved = ((file.size - blob.size)/file.size)*100;
+
+  let message =
+   'Original: '+originalKB.toFixed(1)+' KB | Compressed: '+
+   newKB.toFixed(1)+' KB | Dimensions: '+
+   img.naturalWidth+' × '+img.naturalHeight+
+   ' | Quality: '+Math.round(finalQuality*100)+'%';
+
+  if(useTarget){
+   message += blob.size <= targetKB*1024
+    ? ' | Target achieved!'
+    : ' | Target could not be reached at this image size.';
+  }
+
+  message += saved > 0
+   ? ' | Saved: '+saved.toFixed(1)+'%'
+   : ' | File size did not decrease.';
+
+  result.textContent = message;
+
+ }catch(error){
+  console.error(error);
+  result.textContent = 'Compression failed. Please try another image.';
+  alert('Could not compress this image.');
+ }
+ }
+ 
  function enhancePhoto(){
  const file=document.getElementById('enhanceFile').files[0];
  if(!file){alert('Please select a photo');return;}
