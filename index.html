@@ -121,21 +121,37 @@ footer{text-align:center;padding:25px;color:#8997b2;border-top:1px solid #263653
    <p>Compress images and PDF files.</p>
   </div>
  </div>
-
- <div class="panel" id="image">
+ 
+<div class="panel" id="image">
   <h2>🖼️ Image Compressor</h2>
-  <p>Choose an image to reduce its size.</p>
-  <input type="file" id="imageFile" accept="image/*">
-  <label>Quality: <span id="qualityText">70%</span></label>
-  <input type="range" id="quality" min="10" max="100" value="70"
-   oninput="qualityText.textContent=this.value+'%'">
-  <button onclick="compressImage()">Compress Image</button>
-  <p id="imageResult" class="result"></p>
-  <a id="imageDownload" class="hidden" download="toolify-image.jpg">
-   <button>Download Image</button>
-  </a>
- </div>
+  <p>Compress your image without changing its dimensions.</p>
 
+  <input type="file" id="imageFile" accept="image/*">
+
+  <h3>Compression Settings</h3>
+
+  <label>Quality: <span id="qualityText">90%</span></label>
+  <input type="range" id="quality" min="10" max="100" value="90"
+    oninput="document.getElementById('qualityText').textContent=this.value+'%'">
+
+  <p>Target file size (KB) – Optional</p>
+  <input type="number" id="targetSize" min="1"
+    placeholder="Example: 100 (leave empty for best quality)">
+
+  <p style="font-size:13px;color:#aeb9d0">
+    Leave target size empty to preserve the selected quality.
+    If a target is entered, quality will automatically adjust.
+  </p>
+
+  <button onclick="compressImage()">Compress Image</button>
+
+  <p id="imageResult" class="result"></p>
+
+  <a id="imageDownload" class="hidden" download="toolify-image.jpg">
+    <button>Download Image</button>
+  </a>
+</div>
+ 
  <div class="panel" id="enhancer">
   <h2>✨ Image Enhancer</h2>
   <p>Enhance your photos and remove backgrounds.</p>
